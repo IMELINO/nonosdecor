@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nonos Décor - Salon de coiffure</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="512x512" href="c:\Users\IG\Downloads\ChatGPT Image 16 juil. 2025, 19_33_11.png">
+  <script src="https://cdn.tailwindcss.com "></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url('https://i.pinimg.com/1200x/8d/72/ec/8d72eccb40b15ef97a97b86e85970e83.jpg ');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+    .hover-underline:hover {
+      text-decoration: underline;
+    }
+    .active-link {
+      color: #db2777;
+      text-decoration: underline;
+    }
+    .dark .text-gray-800 {
+      color: #f3f4f6;
+    }
+    .dark .text-gray-600 {
+      color: #e5e7eb;
+    }
+    .dark .bg-white {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+    }
+    .dark .shadow-md {
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+    }
+    .dark .bg-gray-50 {
+      background-color: #111827;
+    }
+    .dark footer {
+      background-color: #1f2937;
+    }
+
+    /* Styles pour le message de confirmation */
+    #confirmation-message {
+      display: none;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green; /* Couleur par défaut, sera changée en rouge si erreur */
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-gray-800 bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+      <div class="text-2xl font-bold text-pink-600 cursor-pointer" onclick="navigateTo('home')">Nonos Décor</div>
+      <ul class="hidden md:flex space-x-8">
+        <li><a href="#" onclick="navigateTo('home')" class="nav-link active">Accueil</a></li>
+        <li><a href="#" onclick="navigateTo('about')" class="nav-link">À propos</a></li>
+        <li><a href="#" onclick="navigateTo('services')" class="nav-link">Prestations</a></li>
+        <li><a href="#" onclick="navigateTo('gallery')" class="nav-link">Galerie</a></li>
+        <li><a href="#" onclick="navigateTo('contact')" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="flex items-center space-x-4">
+        <button id="darkToggle" class="text-gray-700 dark:text-white text-lg">🌙</button>
+        <button onclick="toggleMobileMenu()" class="md:hidden text-gray-700 dark:text-white">
+          ☰
+        </button>
+      </div>
+    </nav>
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200 p-4 dark:bg-black">
+      <ul class="flex flex-col space-y-2">
+        <li><a href="#" onclick="navigateTo('home')" class="nav-link block py-2">Accueil</a></li>
+        <li><a href="#" onclick="navigateTo('about')" class="nav-link block py-2">À propos</a></li>
+        <li><a href="#" onclick="navigateTo('services')" class="nav-link block py-2">Prestations</a></li>
+        <li><a href="#" onclick="navigateTo('gallery')" class="nav-link block py-2">Galerie</a></li>
+        <li><a href="#" onclick="navigateTo('contact')" class="nav-link block py-2">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+  <!-- Main Content -->
+  <main id="app" class="min-h-screen bg-opacity-70 bg-black"></main>
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner mt-16 py-6 text-center text-gray-600 text-sm dark:bg-black dark:text-gray-300">
+    &copy; 2025 Nonos Décor. Tous droits réservés.
+  </footer>
+  <!-- Script -->
+  <script>
+    const navItems = [
+      { id: "home", label: "Accueil" },
+      { id: "about", label: "À propos" },
+      { id: "services", label: "Prestations" },
+      { id: "gallery", label: "Galerie" },
+      { id: "contact", label: "Contact" },
+    ];
+    const services = [
+      { name: "Coupe classique", price: "5 000 FCFA" },
+      { name: "Tresses africaines", price: "15 000 FCFA" },
+      { name: "Lissage brésilien", price: "25 000 FCFA" },
+      { name: "Soin capillaire profond", price: "8 000 FCFA" },
+      { name: "Coiffure de mariage", price: "35 000 FCFA" },
+      { name: "Coloration professionnelle", price: "12 000 FCFA" },
+    ];
+    const galleryImages = [
+      "https://www.essence.com/wp-content/uploads/2020/06/nneunfiltered-princeaday.jpg",
+      "https://www.byrdie.com/thmb/3OoknEB-PlBaSB_FxPhFTbrm2HU%3D/1500x0/filters%3Ano_upscale%28%29%3Amax_bytes%28150000%29%3Astrip_icc%28%29/Byr_ProtectiveStyles_Social-d2aa01bd4d6f4ab0b1cee8cffe226545.jpg",
+      "https://i.pinimg.com/564x/58/1c/7e/581c7e028f1c7f683151f7cda9ba1b4e.jpg",
+      "https://plugins-media.makeupar.com/smb/blog/post/2024-07-03/3f479faf-c4c1-44ca-ba9b-c40e1b4b43f4.jpg",
+      "https://media.allure.com/photos/66bbc014d0d44b26adcbbaf5/1%3A1/w_2000%2Ch_2000%2Cc_limit/fulani%20braids%202.jpg",
+      "https://frohub.com/wp-content/uploads/2024/06/fulani-braids-1-1024x1024.jpg",
+    ];
+    let activePage = "home";
+    const app = document.getElementById("app");
+    const pageContent = {
+      home: `
+        <section class="py-12 px-4 text-center bg-opacity-70 bg-black">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-white">Bienvenue chez Nonos Décor</h2>
+          <p class="max-w-2xl mx-auto text-lg text-gray-600 mb-8 dark:text-gray-300">
+            Votre salon de coiffure spécialisé dans les coiffures africaines à Cotonou, Bénin.
+            Des mains expertes pour sublimer vos cheveux naturels ou crépus avec élégance et modernité.
+          </p>
+          <div class="flex justify-center">
+            <img src="https://sdmntpritalynorth.oaiusercontent.com/files/00000000-e718-6246-99e3-b71cd12174a2/raw?se=2025-07-24T10%3A37%3A56Z&sp=r&sv=2024-08-04&sr=b&scid=00758c03-4ca7-5e0e-bc06-19a7d1780630&skoid=8e0fb8a9-6beb-4b32-9eda-253f61890767&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-07-24T04%3A48%3A04Z&ske=2025-07-25T04%3A48%3A04Z&sks=b&skv=2024-08-04&sig=tJbDMRTjujANlViyl2p7HAY47QCXXNPZx6Gdw9QkBw8%3D" alt="Salon Nonos Décor" class="rounded-lg shadow-lg w-full max-w-4xl" />
+          </div>
+          <button onclick="navigateTo('services')" class="mt-8 bg-pink-600 hover:bg-pink-700 text-white py-3 px-8 rounded-full text-lg font-semibold transition-all duration-300 hover-scale">
+            Voir les prestations
+          </button>
+        </section>
+      `,
+      about: `
+        <section class="py-12 px-4">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 text-center dark:text-white">À propos de Nonos Décor</h2>
+          <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <p class="text-gray-600 mb-4 dark:text-gray-300">
+                Fondé en 2018 par Renaude Godonou, passionnée de coiffure africaine depuis son plus jeune âge,
+                Nonos Décor est né d’une envie : offrir aux femmes béninoises un espace moderne et chaleureux où leurs cheveux sont sublimés.
+              </p>
+              <p class="text-gray-600 mb-4 dark:text-gray-300">
+                Notre salon allie tradition et modernité, avec une équipe de coiffeurs certifiés formés aux dernières techniques de tresses, lissage et soins capillaires.
+              </p>
+              <p class="text-gray-600 dark:text-gray-300">
+                Nous utilisons des produits naturels et adaptés à chaque type de cheveux pour préserver la santé de votre chevelure.
+              </p>
+            </div>
+            <div>
+              <img src="https://i0.wp.com/therighthairstyles.com/wp-content/uploads/2015/01/Natural-Hairstyles-for-Black-Women.jpg?fit=1280%2C720&ssl=1" alt="Équipe du salon" class="rounded-lg shadow-md w-full" />
+            </div>
+          </div>
+        </section>
+      `,
+      services: `
+        <section class="py-12 px-4">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 text-center dark:text-white">Nos Prestations</h2>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            ${services.map(s => `
+              <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow border-l-4 border-pink-500">
+                <h3 class="text-xl font-semibold mb-2">${s.name}</h3>
+                <p class="text-pink-600 font-medium">${s.price}</p>
+              </div>`).join('')}
+          </div>
+          <div class="mt-12 max-w-3xl mx-auto text-center">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Pourquoi choisir Nonos Décor ?</h3>
+            <ul class="grid md:grid-cols-3 gap-4 text-gray-600 dark:text-gray-300">
+              <li class="flex flex-col items-center">
+                <svg class="w-10 h-10 text-pink-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Experts en coiffures africaines</span>
+              </li>
+              <li class="flex flex-col items-center">
+                <svg class="w-10 h-10 text-pink-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Rendez-vous rapide et flexible</span>
+              </li>
+              <li class="flex flex-col items-center">
+                <svg class="w-10 h-10 text-pink-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Produits naturels et sans danger</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+      `,
+      gallery: `
+        <section class="py-12 px-4">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 text-center dark:text-white">Galerie</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            ${galleryImages.map((src, i) => `
+              <div class="group relative overflow-hidden rounded-lg shadow-md cursor-pointer transform transition-transform duration-300 hover:scale-105">
+                <img src="${src}" alt="Coiffure ${i+1}" class="w-full h-64 object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-end">
+                  <p class="text-white p-4 text-lg font-medium">Avant / Après</p>
+                </div>
+              </div>`).join('')}
+          </div>
+          <div class="mt-12 text-center">
+            <p class="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
+              Découvrez notre travail à travers ces réalisations récentes.
+            </p>
+            <a href=" https://wa.me/22966768470 " target="_blank" rel="noopener noreferrer"
+               class="mt-6 inline-block bg-pink-600 hover:bg-pink-700 text-white py-3 px-8 rounded-full text-lg font-semibold transition-all duration-300 hover-scale">
+              Réserver un rendez-vous
+            </a>
+          </div>
+        </section>
+      `,
+      contact: `
+        <section class="py-12 px-4">
+          <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 text-center dark:text-white">Contactez-nous</h2>
+          <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+            <form id="contact-form" action="https://formspree.io/f/xanbegnl" method="POST" class="space-y-4">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Nom</label>
+                <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Email</label>
+                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+              </div>
+              <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Message</label>
+                <textarea id="message" name="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"></textarea>
+              </div>
+              <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 px-4 rounded-md font-semibold transition-colors duration-300">
+                Envoyer le message
+              </button>
+              <div id="confirmation-message">
+                ✅ Merci pour votre message ! On vous répond très vite 💌
+              </div>
+            </form>
+            <div class="space-y-6">
+              <div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-white">Coordonnées</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                  Situé à 150m de MMS<br>
+                  01 BP Pahou, Bénin
+                </p>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-white">Horaires</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                  Lundi - Samedi : 7h - 21h<br>
+                  Dimanche : Fermé
+                </p>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-white">WhatsApp</h3>
+                <p class="text-gray-600 dark:text-gray-300">+229 01 66 76 84 70</p>
+                <a href="https://wa.me/22966768470 " target="_blank" rel="noopener noreferrer"
+                   class="mt-2 inline-block bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md text-sm font-semibold transition-colors duration-300">
+                  Contacter via WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mt-12">
+            <iframe title="Google Maps" src="https://maps.google.com/maps?q=Cotonou,%20Bénin&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                    width="100%" height="400" style="border:0" allowfullscreen="" aria-hidden="false" tabindex="0"
+                    class="rounded-lg shadow-md"></iframe>
+          </div>
+        </section>
+      `,
+      notFound: `<section class="p-8 text-center"><h2 class="text-2xl dark:text-white">Page non trouvée</h2></section>`
+    };
+    const render = () => {
+      app.innerHTML = pageContent[activePage] || pageContent['notFound'];
+      updateNav();
+      // Ajouter l'écouteur d'événements après le rendu de la page contact
+      if (activePage === 'contact') {
+        const form = document.getElementById("contact-form");
+        const confirmation = document.getElementById("confirmation-message");
+
+        if (form && confirmation) {
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+              method: "POST",
+              body: formData,
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              form.reset();
+              confirmation.style.color = "green"; // Réinitialiser la couleur
+              confirmation.innerHTML = "✅ Merci pour votre message ! On vous répond très vite 💌";
+              confirmation.style.opacity = 0;
+              confirmation.style.display = "block";
+
+              // Effet fade-in
+              let opacity = 0;
+              const fade = setInterval(() => {
+                opacity += 0.05;
+                confirmation.style.opacity = opacity;
+                if (opacity >= 1) clearInterval(fade);
+              }, 30);
+            } else {
+              confirmation.innerHTML = "❌ Une erreur s’est produite. Réessayez 😢";
+              confirmation.style.color = "red";
+              confirmation.style.display = "block";
+              confirmation.style.opacity = 1; // Afficher directement en cas d'erreur
+            }
+          });
+        }
+      }
+    };
+    const navigateTo = (page) => {
+      activePage = page;
+      render();
+    };
+    const updateNav = () => {
+      document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active-link"));
+      document.querySelectorAll(`[onclick="navigateTo('${activePage}')"]`).forEach(el => el.classList.add("active-link"));
+    };
+    const toggleMobileMenu = () => {
+      document.getElementById("mobileMenu").classList.toggle("hidden");
+    };
+    // La fonction handleSubmit originale est supprimée car elle est remplacée par le nouveau script
+    document.getElementById("darkToggle").addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+    });
+    window.onload = () => {
+      render();
+    };
+  </script>
+</body>
+</html>
